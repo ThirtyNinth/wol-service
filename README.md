@@ -9,14 +9,18 @@
 # Сборка
 
 ## Windows:
+```bat
 cargo build --release --bin wol_service
+```
 
 ## Linux (кросс-компиляция с Windows):
 Требуется [Zig](https://ziglang.org/download/) в PATH.
 
+```shell
 rustup target add x86_64-unknown-linux-gnu
 cargo install cargo-zigbuild
 cargo zigbuild --release --target x86_64-unknown-linux-gnu --bin wol_service
+```
 
 Или всё одной командой: build.bat — fmt --check, clippy, сборка всех бинарей
 под Windows и Linux (для Linux нужен zig в PATH). Артефакты складываются в dist\:
@@ -27,14 +31,20 @@ wol_service.exe и его вариант без расширения для Linu
 ## Linux (systemd):
 
 1. Скопировать бинарник и unit-файл:
-sudo cp wol_service /usr/local/bin/
-sudo cp wol-service.service /etc/systemd/system/
+
+   ```bash
+   sudo cp wol_service /usr/local/bin/
+   sudo cp wol-service.service /etc/systemd/system/
+   ```
 
 2. В wol-service.service задать ExecStart= — путь к бинарнику и команду.
 
 3. Активировать:
-sudo systemctl daemon-reload
-sudo systemctl enable --now wol-service
+
+   ```bash
+   sudo systemctl daemon-reload
+   sudo systemctl enable --now wol-service
+   ```
 
 ## Windows:
 
@@ -46,9 +56,11 @@ sudo systemctl enable --now wol-service
 Удаление — uninstall-service-windows.bat от администратора.
 
 ## Изменение команды службы (без пересоздания):
+```bat
 sc config WOL-LISTENER binPath= "\"<путь>\wol_service.exe\" <новая команда>"
 sc stop WOL-LISTENER
 sc start WOL-LISTENER
+```
 
 Команда всегда берётся из binPath: диспетчер задач (колонка «Командная
 строка») показывает ровно ту, что будет исполнена. Аргументы, переданные
@@ -56,17 +68,23 @@ sc start WOL-LISTENER
 с видимой в списке процессов.
 
 *Консольный режим (отладка; логи по умолчанию на уровне DEBUG — см. # Логирование):
+```bat
 wol_service.exe shutdown /s /t 0 /f
+```
 
-# Запуск без аргументов — только логирование.
-# Всё, что после имени программы — команда для выполнения. Кавычки и пробелы в аргументах сохраняются.
+- Запуск без аргументов — только логирование.
+- Всё, что после имени программы — команда для выполнения. Кавычки и пробелы в аргументах сохраняются.
 
+```bash
 ./wol_service shutdown -h now
 ./wol_service /usr/local/bin/my-script.sh "arg with spaces"
 ./wol_service
+```
 
+```bat
 wol_service.exe shutdown /s /t 0
 wol_service.exe
+```
 
 # Логирование
 
@@ -90,9 +108,11 @@ wol_service.exe
 - далее 16 повторений целевого MAC-адреса
 - MAC должен быть в списке локальных интерфейсов
 
-# Debounce: одно срабатывание не чаще 10 секунд.
-# Обновление MAC-адресов - раз в минуту.
-# Интерфейсы фильтруются: исключаются loopback, виртуальные, Docker, VMware и прочие; учитываются только UP-интерфейсы с валидным MAC и IPv4.
+Debounce: одно срабатывание не чаще 10 секунд.
+
+Обновление MAC-адресов — раз в минуту.
+
+Фильтрация интерфейсов: исключаются loopback, виртуальные, Docker, VMware и прочие; учитываются только UP-интерфейсы с валидным MAC и IPv4.
 
 
 # Лицензия
@@ -111,14 +131,18 @@ Service for receiving Wake-on-LAN magic packets and executing a configured comma
 # Building
 
 ## Windows:
+```bat
 cargo build --release --bin wol_service
+```
 
 ## Linux (cross-compilation from Windows):
 Requires [Zig](https://ziglang.org/download/) in PATH.
 
+```shell
 rustup target add x86_64-unknown-linux-gnu
 cargo install cargo-zigbuild
 cargo zigbuild --release --target x86_64-unknown-linux-gnu --bin wol_service
+```
 
 Or everything with one command: build.bat — fmt --check, clippy, builds all
 binaries for Windows and Linux (zig in PATH is required for Linux). Artifacts
@@ -129,14 +153,20 @@ are placed into dist\: wol_service.exe and its extensionless variant for Linux.
 ## Linux (systemd):
 
 1. Copy the binary and the unit file:
-sudo cp wol_service /usr/local/bin/
-sudo cp wol-service.service /etc/systemd/system/
+
+   ```bash
+   sudo cp wol_service /usr/local/bin/
+   sudo cp wol-service.service /etc/systemd/system/
+   ```
 
 2. In wol-service.service set ExecStart= — the binary path and the command.
 
 3. Activate:
-sudo systemctl daemon-reload
-sudo systemctl enable --now wol-service
+
+   ```bash
+   sudo systemctl daemon-reload
+   sudo systemctl enable --now wol-service
+   ```
 
 ## Windows:
 
@@ -148,9 +178,11 @@ sudo systemctl enable --now wol-service
 Removal — uninstall-service-windows.bat as administrator.
 
 ## Changing the service command (without recreating the service):
+```bat
 sc config WOL-LISTENER binPath= "\"<path>\wol_service.exe\" <new command>"
 sc stop WOL-LISTENER
 sc start WOL-LISTENER
+```
 
 The command always comes from binPath: Task Manager (the "Command line"
 column) shows exactly the command that will be executed. Arguments passed
@@ -158,18 +190,23 @@ to `sc start` are deliberately ignored — the effective command never
 diverges from what is visible in the process list.
 
 *Console mode (debugging; logging defaults to DEBUG — see # Logging):
+```bat
 wol_service.exe shutdown /s /t 0 /f
+```
 
-# Running without arguments — logging only.
-# Everything after the program name — the command to execute. Quotes and
-# spaces in arguments are preserved.
+- Running without arguments — logging only.
+- Everything after the program name — the command to execute. Quotes and spaces in arguments are preserved.
 
+```bash
 ./wol_service shutdown -h now
 ./wol_service /usr/local/bin/my-script.sh "arg with spaces"
 ./wol_service
+```
 
+```bat
 wol_service.exe shutdown /s /t 0
 wol_service.exe
+```
 
 # Logging
 
@@ -193,9 +230,11 @@ A valid packet:
 - followed by 16 repetitions of the target MAC address
 - the MAC must be in the list of local interfaces
 
-# Debounce: a trigger fires no more often than once per 10 seconds.
-# MAC addresses are refreshed once a minute.
-# Interfaces are filtered: loopback, virtual, Docker, VMware and others are excluded; only UP interfaces with a valid MAC and IPv4 are considered.
+Debounce: a trigger fires no more often than once per 10 seconds.
+
+MAC addresses are refreshed once a minute.
+
+Interfaces are filtered: loopback, virtual, Docker, VMware and others are excluded; only UP interfaces with a valid MAC and IPv4 are considered.
 
 # License
 MIT
