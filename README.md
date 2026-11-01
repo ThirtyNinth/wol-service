@@ -5,6 +5,7 @@
 - Кроссплатформенность — Windows (служба) и Linux (systemd).
 - Автоопределение MAC-адресов — реагирует только на пакеты, адресованные этой машине.
 - Любая команда ОС передаётся через аргументы.
+- Код написан при участии ИИ-ассистента.
 
 # Сборка
 
@@ -127,6 +128,7 @@ Service for receiving Wake-on-LAN magic packets and executing a configured comma
 - Cross-platform — Windows (as a service) and Linux (systemd).
 - Automatic MAC address detection — reacts only to packets addressed to this machine.
 - Any OS command is passed via arguments.
+- The code was written with the assistance of an AI agent.
 
 # Building
 
