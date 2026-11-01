@@ -1,0 +1,15 @@
+[Unit]
+Description=Wake-on-LAN Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+NotifyAccess=main
+ExecStart=/usr/local/bin/wol_service shutdown -h now
+Restart=always
+RestartSec=5
+WatchdogSec=30
+
+[Install]
+WantedBy=multi-user.target

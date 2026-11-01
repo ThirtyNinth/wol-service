@@ -1,0 +1,32 @@
+[package]
+name = "wol_service"
+version = "2.1.0"
+edition = "2021"
+authors = ["ThirtyNinth Psh"]
+description = "Listens for Wake-on-LAN magic packets and executes configured command."
+license = "MIT"
+
+[dependencies]
+hex = "0.4"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"] }
+netdev = "0.47"
+ctrlc = "3.4"
+
+[target.'cfg(windows)'.dependencies]
+windows-service = "0.8"
+tracing-layer-win-eventlog = "1.0.0"
+
+[target.'cfg(unix)'.dependencies]
+sd-notify = "0.4"
+
+# cfg(windows) для build-зависимостей означает хост-платформу
+[target.'cfg(windows)'.build-dependencies]
+winresource = "0.1"
+
+[profile.release]
+opt-level = 'z'
+lto = true
+codegen-units = 1
+panic = 'abort'
+strip = true
